@@ -1,0 +1,26 @@
+server:
+  port:9090
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/kgqa?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 130906
+
+  neo4j:
+    authentication:
+      username: neo4j
+      password: wuyaoyao
+    uri: bolt://localhost:7687
+
+
+rootDirPath: D:/HanLP/data
+HanLP.CustomDictionary.path.diseaseDict: ${rootDirPath}/dictionary/custom/disease.txt
+HanLP.CustomDictionary.path.drugDict: ${rootDirPath}/dictionary/custom/drug.txt
+HanLP.CustomDictionary.path.foodDict: ${rootDirPath}/dictionary/custom/food.txt
+HanLP.CustomDictionary.path.checkDict: ${rootDirPath}/dictionary/custom/check.txt
+HanLP.CustomDictionary.path.departmentDict: ${rootDirPath}/dictionary/custom/department.txt
+HanLP.CustomDictionary.path.producerDict: ${rootDirPath}/dictionary/custom/producer.txt
+HanLP.CustomDictionary.path.symptomDict: ${rootDirPath}/dictionary/custom/symptom.txt
+HanLP.CustomDictionary.cache.path: ${rootDirPath}/dictionary/custom/CustomDictionary.txt.bin

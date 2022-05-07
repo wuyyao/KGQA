@@ -1,0 +1,179 @@
+body {
+	background: #66CDAA;
+    font-family: 'Goudy Bookletter 1911', serif;
+   	margin: 0;
+   	padding: 0;
+    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.head{
+	width: 100px;
+	height: 320px;
+	background: #66CDAA;
+}
+.separate{
+	height: 8px;
+	position:absolute;
+	left:9%;
+	top: 15%;
+	width:1290px;
+	background: white;
+}
+.content{
+	width: 100%;
+	height: 390px;
+	background: #66CDAA;
+}
+
+.search_before .doctor {
+    position: relative;
+    left: 500px;
+}
+
+.search_before .talk {
+    position: relative;
+    left: 480px;
+    top: -230px;
+}
+
+.content p {
+    position: relative;
+    font-size: 20px;
+    color: whitesmoke;
+    left: 750px;
+    top: -380px;
+}
+
+.search_after {
+    position: relative;
+    left: 493px;
+    top: -60px;
+}
+
+.search_after_graph {
+    position: relative;
+    left: 300px;
+    top: -90px;
+}
+
+.search_after_graph .answer1 {
+    float: left;
+    position: relative;
+    left: 585px;
+    top: -453px;
+}
+
+/*标题*/
+.logo{
+	position:absolute;
+	top:4%;
+	left:9%;
+	font-size: 250%;
+	color: white;
+}
+
+/*导航栏*/
+.nav_bar {
+    position:absolute;
+	top:2%;
+	left:55.5%;
+}
+
+ul {
+    list-style-type: none;
+    margin-left: 230px;
+}
+
+li {
+    display: inline-block;
+}
+
+a {
+	color: white;
+	text-decoration: none;
+}
+
+a:hover {
+	color: black;
+}
+
+li a {
+    display: block;
+    font-size: 24px;
+    text-align: center;
+    padding: 10px 15px;
+}
+
+li a:hover {
+    transform: rotate(5deg) scale(1.1);
+}
+
+li a:hover:before, li a:hover:after{
+    transition: all 0.3s ease;
+    opacity: 1;
+    width: 20px;
+}
+
+li a:before, li a:after {
+    opacity: 0;
+    border-top: 1px solid black;
+    content: '';
+    display: block;
+    position: relative;
+    z-index: -1;
+    margin: auto;
+    width: 0px;
+}
+
+li a:before {
+    top: 0px;
+    transform: rotate(120deg) translateY(-50%) translateX(-50%);
+}
+
+li a:after {
+    top: 5px;
+    transform: rotate(-60deg) translateY(-50%) translateX(-50%);
+}
+
+/*搜索框*/
+.search_box{
+	/*background: #66CDAA;*/
+}
+
+.search_form{
+    position:absolute;
+	top:23%;
+	left:32%;
+    width: 450px;
+    background: #A3D0C3;
+}
+
+.search_form input {
+    font-size: 17px;
+    width: 100%;
+    height: 42px;
+    padding-left: 10px;
+    border: 2px solid #7BA7AB;
+    border-radius: 5px;
+    outline: none;
+    background: #F9F0DA;
+    color: #9E9C9C;
+}
+.search_form button {
+    position: absolute;
+    top: 0;
+    right: -65px;
+    width: 50px;
+    height: 47px;
+    border: 0px;
+    background-color: #7BA7AB;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.search_form button:hover {
+    background-color: #7CAB97;
+}
+

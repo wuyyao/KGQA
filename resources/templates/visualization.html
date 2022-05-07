@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="GBK"/>
+    <title>可视化页</title>
+    <link rel="stylesheet" href="../statics/css/style.css" type="text/css">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <style>
+        html, body, #kgDiv {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+        svg circle {
+            fill: white;
+            transition: r 0.2s;
+        }
+        svg .nodeText {
+            fill: #000;
+            font-size: 18px;
+        }
+        svg .linkLine {
+            stroke: #ccc; /*线的颜色*/
+            stroke-width: 1; /*线的宽度*/
+        }
+        svg .linkText.active {
+            fill-opacity: 1;
+        }
+        svg .linkMarker {
+            fill: #ccc;
+            stroke-width: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="head">
+        <div class="logo"><span>基于医疗知识图谱的智能问答系统</span></div>
+        <ul class="nav_bar">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="visualization.html">可视化</a></li>
+            <li><a href="login.html">登录注册</a></li>
+        </ul>
+        <div class="separate"></div>
+        <div class="search_box">
+            <p style="position: relative;font-size: 22px;left: 370px;top: 140px;color: #F9F0DA;letter-spacing: 3px;font-family: Times;text-align: center;">知识图谱可视化</p>
+            <div  class="search_form" id="search">
+                <input type="text" v-model="name" placeholder="请输入疾病名称，如“百日咳”">
+                <button type="submit" @click="look"><img src="../statics/img/search.png" width="35" height="35"/></button>
+            </div>
+            <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+            <script>
+                new Vue({
+                    el: '#search',
+                    data: {
+                        name: '',
+                    },
+                    methods: {
+                        look: function () {
+                            if (this.name.length <= 0) {
+                                alert("请输入疾病名称！")
+                            } else {
+                                document.getElementById("search_before").style.display = "none";
+                                document.getElementById("search_after").style.display = "block";
+                                axios.post('http://localhost:8080/query/knowledgeGraph', {
+                                        name: this.name
+                                    },
+                                    {
+                                        headers: {'Content-Type': 'application/json'}   //跨域
+                                    }).then(function (dat) {
+
+                                    var nodes = new Array();
+                                    var links = new Array();
+                                    let a = {
+                                        id: 1,
+                                        name: JSON.stringify(dat.data.show.name).toString().replace(/[""]/g, '')
+                                    };
+                                    nodes[0] = a;
+
+                                    var count = 1;
+                                    var l1 = dat.data.show.doEat.replace(/[\[\] ]/g, '');
+                                    var bArr = l1.split(",");
+                                    bArr.forEach((item,i)=>{
+                                        if(i < 3) {
+                                            count++;
+                                            let b = {
+                                                id: count,
+                                                name: item
+                                            };
+                                            let link1 = {
+                                                source: 1, target: count, relation: '宜吃'
+                                            };
+                                            nodes[count-1] = b;
+                                            links[count-2] = link1;
+                                        }
+                                    });
+
+                                    var l2 = dat.data.show.recommendEat.replace(/[\[\] ]/g, '');
+                                    var cArr = l2.split(",");
+                                    cArr.forEach((item,i)=> {
+                                        if(i<3){
+                                            count++;
+                                            let c = {
+                                                id: count,
+                                                name: item
+                                            };
+                                            let link2 = {
+                                                source: 1, target: count, relation: '推荐食谱'
+                                            };
+                                            nodes[count - 1] = c;
+                                            links[count - 2] = link2;
+                                        }
+                                    });
+
+                                    var l3 = dat.data.show.noEat.replace(/[\[\] ]/g, '');
+                                    var dArr = l3.split(",");
+                                    dArr.forEach((item,i)=> {
+                                        if(i<3){
+                                            count++
+                                            let d = {
+                                                id: count,
+                                                name: item
+                                            };
+                                            let link3 = {
+                                                source: 1, target: count, relation: '忌吃'
+                                            };
+                                            nodes[count - 1] = d;
+                                            links[count - 2] = link3;
+                                        }
+                                    });
+
+                                    var l4 = dat.data.show.accompanyWith.replace(/[\[\] ]/g, '');
+                                    var eArr = l4.split(",");
+                                    eArr.forEach((item,i)=> {
+                                        count++;
+                                        let e = {
+                                            id: count,
+                                            name: item
+                                        };
+                                        let link4 = {
+                                            source: 1, target: count, relation: '并发症'
+                                        };
+                                        nodes[count - 1] = e;
+                                        links[count - 2] = link4;
+                                    });
+
+                                    var l5 = dat.data.show.recommendDrug.replace(/[\[\] ]/g, '');
+                                    var fArr = l5.split(",");
+                                    fArr.forEach((item,i)=> {
+                                        if(i<3){
+                                            count++;
+                                            let f = {
+                                                id: count,
+                                                name: item
+                                            };
+                                            let link5 = {
+                                                source: 1, target: count, relation: '推荐药品'
+                                            };
+                                            nodes[count - 1] = f;
+                                            links[count - 2] = link5;
+                                        }
+                                    });
+
+                                    var l6 = dat.data.show.symptom.replace(/[\[\] ]/g, '');
+                                    var hArr = l6.split(",");
+                                    hArr.forEach((item,i)=> {
+                                        if(i<3){
+                                            count++;
+                                            let h = {
+                                                id: count,
+                                                name: item
+                                            };
+                                            let link6 = {
+                                                source: 1, target: count, relation: '症状'
+                                            };
+                                            nodes[count - 1] = h;
+                                            links[count - 2] = link6;
+                                        }
+                                    });
+                                    console.log(nodes);
+                                    console.log(links);
+                                    localStorage.setItem('nodes', JSON.stringify(nodes));
+                                    localStorage.setItem('links', JSON.stringify(links));
+
+                                    paint();
+                                    document.getElementById("info1").innerHTML = JSON.stringify(dat.data.info.name).toString().replace(/[""]/g, '');
+                                    document.getElementById("info2").innerHTML = JSON.stringify(dat.data.info.desc).toString().replace(/[""\\n]/g, '');
+                                    document.getElementById("info3").innerHTML = JSON.stringify(dat.data.info.cause).toString().replace(/[""\\n]/g, '');
+                                    document.getElementById("info4").innerHTML = JSON.stringify(dat.data.info.department).toString().replace(/[""]/g, '');
+                                    document.getElementById("info5").innerHTML = JSON.stringify(dat.data.info.time).toString().replace(/[""]/g, '');
+                                    document.getElementById("info6").innerHTML = JSON.stringify(dat.data.info.way).toString().replace(/[""]/g, '');
+                                    document.getElementById("info7").innerHTML = JSON.stringify(dat.data.info.easy).toString().replace(/[""]/g, '');
+                                    document.getElementById("info8").innerHTML = JSON.stringify(dat.data.info.prob).toString().replace(/[""]/g, '');
+                                    document.getElementById("info9").innerHTML = JSON.stringify(dat.data.info.prevent).toString().replace(/[""\\n\[\]]/g, '');
+                                    document.getElementById("info10").innerHTML = JSON.stringify(dat.data.info.cure).toString().replace(/[""\\n\[\]]/g, '');
+                                }).catch(function () {
+                                    console.log("查找失败")
+                                })
+                            }
+                        },
+                    }
+                })
+            </script>
+        </div>
+    </div>
+    <div class="content">
+        <div class="search_before" id="search_before">
+            <img src="../statics/img/doctor2.png" class="doctor" width="150px" height="340px"/>
+            <img src="../statics/img/talk.png" class="talk" width="460px" height="180"/>
+            <p>您好，我是小瑶，很高兴为您服务！</p>
+        </div>
+        <div class="search_after_graph" id="search_after" style="display: none">
+            <div id="kgDiv" style="overflow: auto;height: 450px;width: 580px;border: #7BA7AB 2px solid;background-color: #F9F0DA">
+            </div>
+            <div class="answer1"  id="answer1" style="overflow: auto;height: 450px;width: 280px;border: #7BA7AB 2px solid;background-color: #F9F0DA">
+                <h5>名称：<span id="info1"></span></h5>
+                <h5>简介</h5>
+                <span id="info2"></span>
+                <h5>病因</h5>
+                <span id="info3"></span>
+                <h5>就诊科室</h5>
+                <span id="info4"></span>
+                <h5>持续时间</h5>
+                <span id="info5"></span>
+                <h5>传播途径</h5>
+                <span id="info6"></span>
+                <h5>易感人群</h5>
+                <span id="info7"></span>
+                <h5>治愈概率</h5>
+                <span id="info8"></span>
+                <h5>预防措施</h5>
+                <span id="info9"></span>
+                <h5>治疗方式</h5>
+                <span id="info10"></span>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function paint () {
+        var nodes = JSON.parse(localStorage.getItem('nodes'));
+        /*var links = [{source: 1, target: 2, relation: '宜吃'}, {source: 1, target: 3, relation: '推荐食谱'},
+            {source: 1, target: 4, relation: '忌吃'}, {source: 1, target: 5, relation: '并发症'}, {source: 1, target: 6, relation: '推荐药品'}];*/
+        var links = JSON.parse(localStorage.getItem('links'));
+        kgBuider(nodes, links);
+    }
+    //tick表示运动进行中每更新一帧时
+    function ticked() {
+        //更新连接线的位置
+        linkLine.attr('d', function (d) {
+            var path = 'M ' + d.source.x + ' ' + d.source.y
+                + ' L ' + d.target.x + ' ' + d.target.y;
+            return path;
+        });
+        //更新连接线上的矩形的位置
+        linkTextRect.attr('x', function (d) {
+            return (d.source.x + d.target.x) / 2 - 10;
+        }).attr('y', function (d) {
+            return (d.source.y + d.target.y) / 2 - 16.5;
+        }).style('width', function (d) {
+            return d.relation.length * 12 + 20;
+        });
+        //更新连接线上的文字的位置
+        linkText.attr('x', function (d) {
+            return (d.source.x + d.target.x) / 2;
+        }).attr('y', function (d) {
+            return (d.source.y + d.target.y) / 2;
+        });
+        //更新节点和文字
+        d3.selectAll('circle')
+            .attr('cx', function (d) {
+                return d.x
+            })
+            .attr('cy', function (d) {
+                return d.y
+            });
+        d3.selectAll('.nodeText').attr('x', function (d) {
+            return d.x
+        }).attr('y', function (d) {
+            if (d.id === 1) {
+                return d.y + 5
+            }
+            return d.y + 5
+        });
+    }
+
+    //生成图谱
+    function kgBuider(nodes, links) {
+        //生成图谱之前先清空之前的图谱
+        document.getElementById('kgDiv').textContent = '';
+        //图谱的宽高
+        var height = document.body.clientHeight;
+        var width = document.body.clientWidth;
+        //设置画布
+        var svg = d3.select("#kgDiv").append("svg")
+            .style("height", "100%").style("width", "100%");
+        //设置力导向图
+        force = d3.forceSimulation()
+            //设置画板中心点
+            .force('center', d3.forceCenter(width / 6, height / 3.15))
+            //设置节点间的作用力
+            .force('charge', d3.forceManyBody().strength(-50))
+            .on('tick', ticked)
+            //设置node和link
+            .nodes(nodes)
+            .force('link', d3.forceLink(links).id(function (d) {
+                return d.id
+            }).distance(190).strength(0.2))
+            .restart();
+        ;
+        //设置缩放,svg嵌套g标签，缩放在g标签上进行
+        var g = svg.append('g');
+        var zoomObj = d3.zoom()
+            //监听zoom事件,缩放时调用
+            .on('zoom', function () {
+                var transform = d3.event.transform;
+                g.attr('transform', transform);
+            })
+            //监听end事件，缩放结束时调用
+            .on('end', function () {
+                var transform = d3.event.transform;
+                g.attr('transform', transform);
+            });
+        svg.call(zoomObj).on("dblclick.zoom", null);//取消双击缩放
+        var relationship = g.append('g').attr('class', 'relationships').selectAll('.relationship').data(links).enter().append('g').attr('class', 'relationship');
+        //设置连线上的箭头
+        linkMarker = relationship.append('marker')
+            .attr('class', 'linkMarker')
+            .attr('id', function (d, i) {
+                return 'marker_' + i;
+            })
+            .attr('markerUnits', 'userSpaceOnUse')//设置为strokeWidth箭头会随着线的粗细发生变化,userSpaceOnUse用于确定marker是否进行缩放。取值strokeWidth和userSpaceOnUse，
+            .attr('viewBox', '0 -5 10 10')
+            .attr('refX', 30)//箭头坐标
+            .attr('refY', 0)
+            .attr('markerWidth', 12)//标识的大小
+            .attr('markerHeight', 12)
+            .attr('orient', 'auto')//绘制方向 可设定为：auto（自动确认方向）或者 角度值
+        //设置箭头的路径
+        linkMarker.append('path')
+            .attr('d', 'M0,-5L10,0L0,5');//箭头的路径
+        //设置连线
+        linkLine = relationship
+            .append('path')
+            .attr('class', 'linkLine')
+            //设置线的末尾为箭头
+            .attr('marker-end', function (d, i) {
+                return 'url(#marker_' + i + ')';
+            })
+        //设置一个矩形，将文本放到其中
+        linkTextRect = relationship
+            .append('rect')
+            .attr('class', 'linkTextRect')
+        //设置连接线上的文本
+        linkText = relationship
+            .append('text')
+            .attr('class', 'linkText active')
+            .text(function (d) {
+                //连线文字为节点之间的关系
+                return d.relation;
+            })
+        //设置拖拽
+        var drag = d3.drag()
+            .on('start', function (d, i) {
+                if (!d3.event.active) {
+                    //拖拽开始回调
+                    force.alphaTarget(0.3).restart();//可以使用在交互时重新启动仿真，重新进行布局。必须设置，不然拖动不了。
+                }
+                d.fixed = false;//偏移后是否固定不动
+                d.fx = d.x;//记录当前默认位置（x - 节点当前的 x-位置，如果要为某个节点设置默认的位置，则需要为该节点设置如下两个属性:fx =x位置）
+                d.fy = d.y;
+            })
+            .on('drag', function (d, i) {
+                d.fx = d3.event.x;
+                d.fy = d3.event.y;
+            })
+            .on('end', function (d, i) {
+                //拖动结束后
+                if (!d3.event.active) {
+                    force.alphaTarget(0);
+                }
+                d.fx = null;
+                d.fy = null;
+            })
+
+        var node = g.append('g').attr('class', 'nodeGroup').selectAll('.node').data(nodes).enter().append('g');
+        //设置节点
+        node.append('circle')
+            .attr('class', function (d, i) {
+                if (d.id === 1) {
+                    return 'node centerNode';
+                } else {
+                    return 'node';
+                }
+            })
+            .attr('r', function (d, i) {
+                if (d.id === 1) {
+                    return 35;
+                } else {
+                    return 25;
+                }
+            })
+            /*.style('fill', function (d) {
+                if (d.id == 1) {
+                    return '#CCFFCC';
+                } else if (d.id == 2) {
+                    return '#FFFFCC';
+                } else if (d.id == 3) {
+                    return '#CCCCFF';
+                } else if (d.id == 4) {
+                    return '#FFCCCD';
+                } else if (d.id == 5) {
+                    return '#CCE6FF';
+                } else if (d.id == 6) {
+                    return '#CCFFFE';
+                }
+            })*/
+            .style('fill', function (d) {
+                if (d.id == 1) {
+                    return '#CCFFCC';
+                } else {
+                    return '#FFCCCD';
+                }
+            })
+            .call(drag);
+        //设置节点文字
+        node.append('text').attr('text-anchor', 'middle')
+            .attr('class', 'nodeText')
+            .text(function (d, i) {
+                return d.name
+            })
+            .call(drag);
+    }
+</script>
+</html>

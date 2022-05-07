@@ -1,0 +1,190 @@
+/*菜单按钮*/
+section {
+  position:absolute;
+	left:95%;
+	top: 2%;
+  min-height: 200px;
+}
+
+.btn-float {
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  display: inline-block;
+  border: none;
+  font-size: 12px;
+  color: #FFF;
+  text-align: center;
+  position: relative;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.11);
+}
+.btn-float:hover {
+  text-decoration: none;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15), 0 4px 15px rgba(0, 0, 0, 0.13);
+}
+.btn-float:active, .btn-float:focus {
+  outline: none;
+}
+.btn-float + .btn-float {
+  margin-left: 5px;
+}
+
+.color4 {
+  background: #7BA7AB;
+}
+
+.color3 {
+  background: #7BA7AB;
+}
+
+.color2 {
+  background: #7BA7AB;
+}
+
+.color1 {
+  background: #7BA7AB;
+}
+
+.color0 {
+  background: #7BA7AB;
+}
+
+.icon-bars {
+  background: #fff;
+  height: 1px;
+  width: 22px;
+  margin: auto;
+  display: block;
+  position: relative;
+  -moz-transition: 0.3s 0.3s;
+  -o-transition: 0.3s 0.3s;
+  -webkit-transition: 0.3s;
+  -webkit-transition-delay: 0.3s;
+  -webkit-transition: 0.3s 0.3s;
+          transition: 0.3s 0.3s;
+}
+.icon-bars:after {
+  content: '';
+  position: absolute;
+  height: 22px;
+  width: 1px;
+  background: #fff;
+  top: -10px;
+}
+
+.float-btn-group {
+  position: relative;
+  float: left;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+.float-btn-group .btn-triger {
+  z-index: 15;
+  float: right;
+}
+.float-btn-group .btn-list {
+  position: absolute;
+  right: 0;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+.float-btn-group .btn-list li {
+  display: inline-block;
+}
+.float-btn-group.open .icon-bars {
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.model-2 .float-btn-group .icon-bars {
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+.model-2 .float-btn-group .btn-list .btn-float {
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  -ms-transform: scale(0, 0);
+  -webkit-transform: scale(0, 0);
+  transform: scale(0, 0);
+}
+.model-2 .float-btn-group .btn-list .btn-float:nth-child(1) {
+  -moz-transition: 0.2s 0.3s;
+  -o-transition: 0.2s 0.3s;
+  -webkit-transition: 0.2s;
+  -webkit-transition-delay: 0.3s;
+  -webkit-transition: 0.2s 0.3s;
+          transition: 0.2s 0.3s;
+}
+.model-2 .float-btn-group .btn-list .btn-float:nth-child(2) {
+  -moz-transition: 0.2s 0.5s;
+  -o-transition: 0.2s 0.5s;
+  -webkit-transition: 0.2s;
+  -webkit-transition-delay: 0.5s;
+  -webkit-transition: 0.2s 0.5s;
+          transition: 0.2s 0.5s;
+}
+.model-2 .float-btn-group .btn-list .btn-float:nth-child(3) {
+  -moz-transition: 0.2s 0.7s;
+  -o-transition: 0.2s 0.7s;
+  -webkit-transition: 0.2s;
+  -webkit-transition-delay: 0.7s;
+  -webkit-transition: 0.2s 0.7s;
+          transition: 0.2s 0.7s;
+}
+.model-2 .float-btn-group .btn-list .btn-float:nth-child(4) {
+  -moz-transition: 0.2s 0.92s;
+  -o-transition: 0.2s 0.92s;
+  -webkit-transition: 0.2s;
+  -webkit-transition-delay: 0.92s;
+  -webkit-transition: 0.2s 0.92s;
+          transition: 0.2s 0.92s;
+}
+.model-2 .float-btn-group.open .btn-list .btn-float {
+  opacity: 1;
+  -ms-transform: scale(0.9, 0.9);
+  -webkit-transform: scale(0.9, 0.9);
+  transform: scale(0.9, 0.9);
+}
+.model-2 .float-btn-group.open .btn-list .btn-float:nth-child(1) {
+  top: 55px;
+  -moz-transition: 0.2s 0.9s;
+  -o-transition: 0.2s 0.9s;
+  -webkit-transition: 0.2s;
+  -webkit-transition-delay: 0.9s;
+  -webkit-transition: 0.2s 0.9s;
+          transition: 0.2s 0.9s;
+}
+.model-2 .float-btn-group.open .btn-list .btn-float:nth-child(2) {
+  top: 110px;
+  -moz-transition: 0.2s 0.7s;
+  -o-transition: 0.2s 0.7s;
+  -webkit-transition: 0.2s;
+  -webkit-transition-delay: 0.7s;
+  -webkit-transition: 0.2s 0.7s;
+          transition: 0.2s 0.7s;
+}
+.model-2 .float-btn-group.open .btn-list .btn-float:nth-child(3) {
+  top: 165px;
+  -moz-transition: 0.2s 0.5s;
+  -o-transition: 0.2s 0.5s;
+  -webkit-transition: 0.2s;
+  -webkit-transition-delay: 0.5s;
+  -webkit-transition: 0.2s 0.5s;
+          transition: 0.2s 0.5s;
+}
+.model-2 .float-btn-group.open .btn-list .btn-float:nth-child(4) {
+  top: 220px;
+  -moz-transition: 0.2s 0.3s;
+  -o-transition: 0.2s 0.3s;
+  -webkit-transition: 0.2s;
+  -webkit-transition-delay: 0.3s;
+  -webkit-transition: 0.2s 0.3s;
+          transition: 0.2s 0.3s;
+}

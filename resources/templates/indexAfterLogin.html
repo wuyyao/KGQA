@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="GBK"/>
+    <title id="name1"></title>
+    <link rel="stylesheet" href="../statics/css/style.css" type="text/css">
+    <link rel="stylesheet" href="../statics/css/button.css" type="text/css">
+</head>
+<body>
+<div class="head">
+    <div class="logo"><span>基于医疗知识图谱的智能问答系统</span></div>
+    <ul class="nav_bar">
+        <li><a href="indexAfterLogin.html">首页</a></li>
+        <li><a href="visualizationAfterLogin.html">可视化</a></li>
+        <li><a href="#"><span id = "name"></span></a></li>
+    </ul>
+    <script type="text/javascript">
+        var str = localStorage.getItem("username");
+        document.getElementById("name").innerHTML = str;
+        document.getElementById("name1").innerHTML = str;
+    </script>
+    <section class="model-2">
+        <div class="float-btn-group">
+            <button class="btn-float btn-triger color0"><i class="icon-bars"></i></button>
+            <div class="btn-list">
+                <a href="index.html" class="btn-float color1">退出登录<i class="fa fa1"></i></a>
+                <a href="#" class="btn-float color2">我的足迹<i class="fa fa2"></i></a>
+                <a href="searchHistory.html" class="btn-float color3">搜索历史<i class="fa fa3"></i></a>
+                <a href="#" class="btn-float color4">我的收藏<i class="fa fa4"></i></a>
+            </div>
+        </div>
+    </section>
+    <div class="separate"></div>
+    <div class="search_box">
+        <div class="search_form" id="search">
+            <input id="que" type="text" v-model="question" placeholder="请输入问题">
+            <button id="submit" type="submit" @click="look"><img src="../statics/img/search.png" width="35" height="35"/></button>
+        </div>
+        <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script>
+            new Vue({
+                el: '#search',
+                data: {
+                    question: '',
+                },
+                methods: {
+                    look: function () {
+                        this.question = document.getElementById("que").value;
+                        if (this.question.length <= 0) {
+                            alert("请输入问题！")
+                        } else {
+                            document.getElementById("search_before").style.display="none";
+                            document.getElementById("search_after").style.display="block";
+                            axios.post('http://localhost:8080/query/answer', {
+                                    question: this.question,
+                                    userName: localStorage.getItem("username"),
+                                },
+                                {
+                                    headers: {'Content-Type': 'application/json'}   //跨域
+                                }).then(function (dat) {
+                                if (dat.data.length > 0) {
+                                    var str = dat.data;
+                                    document.getElementById("answer").innerHTML = "答案：" + str;
+                                } else {
+                                    window.alert('搜索出错')
+                                }
+                            }).catch(function () {
+                                console.log("查找失败")
+                            })
+                        }
+                    },
+                }
+            })
+        </script>
+    </div>
+</div>
+<div class="content">
+    <div class="search_before" id="search_before">
+        <img src="../statics/img/doctor2.png" class="doctor" width="150px" height="340px"/>
+        <img src="../statics/img/talk.png" class="talk" width="460px" height="180"/>
+        <p>您好，我是小瑶，很高兴为您服务！</p>
+    </div>
+    <div class="search_after" id="search_after" style="display: none">
+        <div id="answer" style="overflow: auto;height: 300px;width: 510px;border: #7BA7AB 2px solid;background-color: #F9F0DA">
+        </div>
+    </div>
+</div>
+<script src="../statics/js/private.js"></script>
+<script>
+    $('.btn-triger').click(function () {
+        $(this).closest('.float-btn-group').toggleClass('open');
+    });
+</script>
+<script type="text/javascript">
+    var flag = window.location.href.split("?")[1].split("=")[0];
+    if (flag.toString() == "data") {
+        var q = decodeURI(window.location.href.split("?")[1].split("=")[1]);
+        document.getElementById("que").value=q;
+        document.getElementById("submit").click();
+    }
+</script>
+</body>
+</html>

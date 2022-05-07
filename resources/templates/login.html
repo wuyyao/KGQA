@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh" class="no-js" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>登录注册页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../statics/css/demo.css"/>
+    <link rel="stylesheet" type="text/css" href="../statics/css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="../statics/css/animate-custom.css"/>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1> 基于医疗知识图谱的智能问答系统 </h1>
+        <nav class="codrops-demos">
+            <a href="index.html">首页</a>
+        </nav>
+    </header>
+    <section>
+        <div id="container_demo">
+            <a class="hiddenanchor" id="toregister"></a>
+            <a class="hiddenanchor" id="tologin"></a>
+            <div id="wrapper">
+                <div id="login" class="animate form">
+                    <form id="app1">
+                        <h1>登录</h1>
+                        <p>
+                            <label for="username" class="uname" data-icon="u"> 用户名 </label>
+                            <input id="username" v-model="userName" required="required" type="text"
+                                   placeholder="username"/>
+                        </p>
+                        <p>
+                            <label for="password" class="youpasswd" data-icon="p"> 密码 </label>
+                            <input id="password" v-model="userPassword" required="required" type="password"
+                                   placeholder="password"/>
+                        </p>
+                        <p class="keeplogin">
+                            <input type="checkbox" name="loginkeeping" id="loginkeeping" value="loginkeeping"/>
+                            <label for="loginkeeping">自动登录</label>
+                        </p>
+                        <div id="error_box"><br></div>
+                        <p class="login button">
+                            <input type="button" value="登录" @click="login"/>
+                        </p>
+                        <p class="change_link">
+                            忘记密码？
+                            <a href="#toregister" class="to_register">注册</a>
+                        </p>
+                    </form>
+                    <script src="https://unpkg.zhimg.com/axios/dist/axios.min.js"></script>
+                    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+                    <script>
+                        new Vue({
+                            el: '#app1',
+                            data: {
+                                userName: '',
+                                userPassword: ''
+                            },
+                            methods: {
+                                login: function () {
+                                    axios.post('http://localhost:8080/user/login', {
+                                            userName: this.userName,
+                                            userPassword: this.userPassword
+                                        },
+                                        {
+                                            headers: {'Content-Type': 'application/json'}   //跨域
+                                        }).then(function (dat) {
+                                        if (dat.data == '0')
+                                            alert("用户不存在")
+                                        else if (dat.data == '1')
+                                            alert("登录失败，密码错误")
+                                        else if (dat.data == '-1')
+                                            alert("登录失败")
+                                        else{
+                                            //当前窗体跳转
+                                            localStorage.setItem("username",dat.data);
+                                            window.location.href = "indexAfterLogin.html";
+                                        }
+
+                                    }).catch(function () {
+                                        console.log("传输失败")
+                                    })
+                                },
+                                register: function () {
+                                    window.location.href = "register.html"
+                                }
+                            }
+                        })
+                    </script>
+                </div>
+
+                <div id="register" class="animate form">
+                    <form id="app">
+                        <h1> 注册 </h1>
+                        <p>
+                            <label for="usernamesignup" class="uname" data-icon="u">用户名</label>
+                            <input id="usernamesignup" v-model="userName" type="text" placeholder="username"
+                                   @blur="blur" @focus="focus" @input="userNameLimit"/> <span v-html="msg"></span>
+                        </p>
+                        <p>
+                            <label for="emailsignup" class="youmail" data-icon="e"> 手机号码 </label>
+                            <input id="emailsignup" v-model="phone" required="required" type="tel"
+                                   placeholder="cellphone number" @input="phoneLimit"/>
+                        </p>
+                        <p>
+                            <label for="passwordsignup" class="youpasswd" data-icon="p">密码 </label>
+                            <input id="passwordsignup" v-model="userPassword" type="password"
+                                   placeholder="eg. X8df!90EO" @input="userPasswordLimit"/>
+                        </p>
+                        <p>
+                            <label for="passwordsignup_confirm" class="youpasswd" data-icon="p">确认密码 </label>
+                            <input id="passwordsignup_confirm" v-model="password_confirm" type="password"
+                                   placeholder="eg. X8df!90EO"/>
+                        </p>
+                        <p class="signin button">
+                            <input type="button" value="注册" @click="register"/>
+                        </p>
+                        <p class="change_link">
+                            已有账户?
+                            <a href="#tologin" class="to_register"> 去登录 </a>
+                        </p>
+                    </form>
+                    <script>
+                        var pang = new Vue({
+                            el: "#app",
+                            data: {
+                                userName: '',
+                                userPassword: '',
+                                password_confirm: '',
+                                phone: '',
+                                msg: '',
+
+                            },
+                            methods: {
+                                //只能输入英文、数字
+                                userPasswordLimit: function () {
+                                    this.userPassword = this.userPassword.replace(/[^\a-\z\A-\Z0-9]/g, '')
+                                },
+                                // 限制输入特殊字符
+                                userNameLimit: function () {
+                                    this.userName = this.userName.replace(/[ `~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/g, '')
+                                },
+                                //只能输入数字
+                                phoneLimit: function () {
+                                    this.phone = this.phone.replace(/[^0-9]/g, '')
+                                },
+
+                                /**
+                                 * 失去焦点
+                                 * */
+                                blur: function () {
+                                    if (this.userName.length <= 0) {
+                                        pang.msg = '<span style="color: red">用户名不能为空</span>'
+                                    } else {
+                                        axios.post('http://localhost:8080/user/select', {
+                                                name: this.userName
+                                            },
+                                            {
+                                                headers: {'Content-Type': 'application/json'}   //跨域
+                                            }).then(function (dat) {
+                                            if (dat.data == "0") {
+                                                pang.msg = '<span style="color: green">用户名可用</span>'
+                                            } else if (dat.data == "1")
+                                                pang.msg = '<span style="color: red">用户名已存在</span>'
+                                        })
+                                    }
+                                },
+                                /**
+                                 * 获取焦点
+                                 * */
+                                focus: function () {
+                                    pang.msg = null
+                                },
+
+                                /**
+                                 * 点击注册按钮事件
+                                 * */
+                                register: function () {
+                                    if (this.userName.length <= 0) {
+                                        alert("用户名不能为空")
+                                    } else if (this.phone.length != 11) {
+                                        alert("手机号必须为11位")
+                                    } else if (this.userPassword.length <= 0) {
+                                        alert("密码不能为空")
+                                    } else if (this.userPassword.length < 6 || this.userPassword.length >= 20) {
+                                        alert("密码长度大于6小于20")
+                                    } else if (this.userPassword != this.password_confirm) {
+                                        alert("两次输入密码不一致")
+                                    } else {
+                                        axios.post('http://localhost:8080/user/register', {
+                                                name: this.userName,
+                                                password: this.userPassword,
+                                                phone: this.phone
+                                            },
+                                            {
+                                                headers: {'Content-Type': 'application/json'}   //跨域
+                                            }).then(function (dat) {
+                                            if (dat.data == '1') {
+                                                window.location.href = '#tologin'
+                                            } else {
+                                                alert("注册失败, 该用户名已经存在！")
+                                            }
+
+                                        })
+                                    }
+                                }
+                            }
+                        })
+                    </script>
+                </div>
+                <div id="person" class="carton">
+                    <img src="../statics/img/doctor.png" width="320" height="450">
+                    <img src="../statics/img/word.png" class="word">
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>
